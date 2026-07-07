@@ -7,3 +7,9 @@ app/build/
 local.properties
 *.apk
 *.jks
+*.aab
+*.keystore
+keystore.properties
+signing.properties
+*password*
+*credential*

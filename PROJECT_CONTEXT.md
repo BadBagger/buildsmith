@@ -8,10 +8,13 @@
 - Repo: `https://github.com/BadBagger/buildsmith`
 - Repo visibility: public, so DevHub can read releases and download APK assets without a logged-in GitHub session
 - Role: local-first Smithware Studios command center for turning rough app ideas into build-ready prompts, assets, update logs, and launch checklists
-- Latest release: `v0.2.1-prompt-tagline-layout`
-- Release URL: `https://github.com/BadBagger/buildsmith/releases/tag/v0.2.1-prompt-tagline-layout`
-- Release APK assets: `BuildSmith.apk`, `BuildSmith-release-v0.2.1-prompt-tagline-layout.apk`
+- Latest release: `v0.2.2-release-signed`
+- Previous release: `v0.2.1-prompt-tagline-layout`
+- Release URL: `https://github.com/BadBagger/buildsmith/releases/tag/v0.2.2-release-signed`
+- Release APK assets: `BuildSmith.apk`, `BuildSmith-release-v0.2.2-release-signed.apk`
 - DevHub connection: added in SoftSmith DevHub `v2.1.10-buildsmith`; refreshed as BuildSmith Studio in `v2.1.11-buildsmith-studio`; pinned to `v0.2.1-prompt-tagline-layout` in `v2.1.12-buildsmith-tagline-layout`
+- Release signing: local-only `keystore.properties`; release builds use the Smithware outside-Play release key for `com.smithware.buildsmith`.
+- Release SHA-256: `df5f2f9b73a1ae33f331e253255cb47eb14f789a9a25f2eef8870c087a80ad7c`
 
 ## Current Scope
 
@@ -33,6 +36,7 @@ BuildSmith Studio includes:
 - Demo projects
 - Local Room database and DataStore settings
 - Icon Studio for picking an image, removing connected white background locally, previewing, and exporting a transparent PNG
+- `BuildSmithSummaryProvider` exposes a read-only Smithware Central summary at `content://com.smithware.buildsmith.summary/summary` with active project, checklist, prompt, and latest-project counts only.
 
 ## Constraints
 

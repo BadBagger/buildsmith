@@ -18,6 +18,10 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+        <provider
+            android:name=".BuildSmithSummaryProvider"
+            android:authorities="com.smithware.buildsmith.summary"
+            android:exported="true" />
         <activity
             android:name=".MainActivity"
             android:exported="true"

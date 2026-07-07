@@ -182,6 +182,18 @@ interface BuildSmithDao {
 
     @Query("SELECT COUNT(*) FROM projects WHERE appName = :name")
     suspend fun projectCountByName(name: String): Int
+
+    @Query("SELECT COUNT(*) FROM projects WHERE archived = 0")
+    suspend fun activeProjectCount(): Int
+
+    @Query("SELECT COUNT(*) FROM checklist_items WHERE checked = 0")
+    suspend fun openChecklistCount(): Int
+
+    @Query("SELECT COUNT(*) FROM prompts")
+    suspend fun promptCount(): Int
+
+    @Query("SELECT appName FROM projects WHERE archived = 0 ORDER BY id DESC LIMIT 3")
+    suspend fun latestProjectNames(): List<String>
 }
 
 @Database(
