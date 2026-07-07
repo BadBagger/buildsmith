@@ -8,10 +8,10 @@
 - Repo: `https://github.com/BadBagger/buildsmith`
 - Repo visibility: public, so DevHub can read releases and download APK assets without a logged-in GitHub session
 - Role: local-first Smithware Studios command center for turning rough app ideas into build-ready prompts, assets, update logs, and launch checklists
-- Latest release: `v0.2.0-studio-command-center`
-- Release URL: `https://github.com/BadBagger/buildsmith/releases/tag/v0.2.0-studio-command-center`
-- Release APK assets: `BuildSmith.apk`, `BuildSmith-release-v0.2.0-studio-command-center.apk`
-- DevHub connection: added in SoftSmith DevHub `v2.1.10-buildsmith`; refreshed as BuildSmith Studio in `v2.1.11-buildsmith-studio`
+- Latest release: `v0.2.1-prompt-tagline-layout`
+- Release URL: `https://github.com/BadBagger/buildsmith/releases/tag/v0.2.1-prompt-tagline-layout`
+- Release APK assets: `BuildSmith.apk`, `BuildSmith-release-v0.2.1-prompt-tagline-layout.apk`
+- DevHub connection: added in SoftSmith DevHub `v2.1.10-buildsmith`; refreshed as BuildSmith Studio in `v2.1.11-buildsmith-studio`; pinned to `v0.2.1-prompt-tagline-layout` in `v2.1.12-buildsmith-tagline-layout`
 
 ## Current Scope
 
@@ -27,6 +27,8 @@ BuildSmith Studio includes:
 - Monetization planning content
 - Asset tracker for icons, screenshots, store descriptions, privacy notes, closed testing notes, and store listings
 - Bug/update log that turns test feedback into Codex update prompts
+- Prompt templates use the target app's own tagline guidance instead of BuildSmith Studio's tagline
+- Wizard choices, builder section chips, model templates, and prompt type buttons wrap cleanly on narrow phones
 - Settings
 - Demo projects
 - Local Room database and DataStore settings

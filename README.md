@@ -16,6 +16,8 @@ It helps indie developers, solo builders, and small studios manage the loop from
 - Bug and update log
 - Build and launch checklist
 - Icon Studio for local white-background removal and transparent PNG export
+- Target-app tagline guidance in generated prompts
+- Mobile-safe wrapping for long choice and prompt buttons
 - Room database and DataStore settings
 
 BuildSmith v1 does not compile APKs on the phone and does not upload app ideas or prompts.

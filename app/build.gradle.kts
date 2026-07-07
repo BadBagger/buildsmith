@@ -12,8 +12,8 @@ android {
         applicationId = "com.smithware.buildsmith"
         minSdk = 26
         targetSdk = 36
-        versionCode = 4
-        versionName = "0.2.0-studio-command-center"
+        versionCode = 5
+        versionName = "0.2.1-prompt-tagline-layout"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 

@@ -17,6 +17,8 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -53,7 +55,6 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -66,7 +67,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
@@ -92,7 +92,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import java.io.File
 import java.io.FileOutputStream
-import kotlin.math.roundToInt
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -211,10 +210,15 @@ private fun PrivacyStrip() {
 }
 
 @Composable
+@OptIn(ExperimentalLayoutApi::class)
 private fun StatusFilters(selected: String, onSelect: (String) -> Unit) {
     val statuses = listOf("All", "Idea", "Prompt Ready", "In Codex", "Testing", "Store Assets", "Published")
-    Row(Modifier.padding(20.dp, 10.dp).fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-        statuses.take(4).forEach { FilterChip(selected = selected == it, onClick = { onSelect(it) }, label = { Text(it) }) }
+    FlowRow(
+        modifier = Modifier.padding(20.dp, 10.dp).fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        statuses.forEach { FilterChip(selected = selected == it, onClick = { onSelect(it) }, label = { Text(it) }) }
     }
 }
 
@@ -310,7 +314,7 @@ private fun BuilderScreen(state: BuildSmithUiState, vm: BuildSmithViewModel) {
     LazyColumn(contentPadding = PaddingValues(bottom = 28.dp)) {
         item {
             Header(project.appName, project.description)
-            Row(Modifier.padding(horizontal = 20.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) { sections.forEach { FilterChip(selected = section == it, onClick = { section = it }, label = { Text(it) }) } }
+            WrapChips(Modifier.padding(horizontal = 20.dp), sections, section) { section = it }
         }
         when (section) {
             "Command" -> item { CommandCenter(project, state, vm) }
@@ -387,7 +391,7 @@ private fun BugUpdateLog(project: ProjectEntity, state: BuildSmithUiState, vm: B
         Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
             Text("Log test feedback", fontWeight = FontWeight.Bold)
             Field("Example: MarkerMic mark button too small during recording", note) { note = it }
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            FlowChipGroup {
                 Button(onClick = { vm.quickAddBug(project.id, note); note = "" }, enabled = note.isNotBlank()) { Text("Add log") }
                 OutlinedButton(onClick = { vm.generatePrompt(project.id, "Bug fix prompt") }) { Text("Bug prompt") }
                 OutlinedButton(onClick = { vm.generatePrompt(project.id, "Update version prompt") }) { Text("Update prompt") }
@@ -431,11 +435,8 @@ private fun DataPlanner(project: ProjectEntity, state: BuildSmithUiState, vm: Bu
     val templates = listOf("UserProfile", "Task", "Note", "Reminder", "Transaction", "MealLog", "WeightLog", "Recording", "Folder", "Project", "Settings")
     Column(Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
         Text("Model templates", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
-            templates.take(4).forEach { AssistChip(onClick = { vm.addModelTemplate(project.id, it) }, label = { Text(it) }) }
-        }
-        templates.drop(4).chunked(3).forEach { row ->
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) { row.forEach { AssistChip(onClick = { vm.addModelTemplate(project.id, it) }, label = { Text(it) }) } }
+        FlowChipGroup {
+            templates.forEach { AssistChip(onClick = { vm.addModelTemplate(project.id, it) }, label = { Text(it) }) }
         }
         state.models.filter { it.projectId == project.id }.forEach { InfoCard(it.name, "${it.purpose}\nFields:\n${it.fields}\nRelationships: ${it.relationships}\n${it.notes}", onDelete = { vm.deleteModel(it.id) }) }
     }
@@ -451,8 +452,12 @@ private fun PromptsScreen(state: BuildSmithUiState, vm: BuildSmithViewModel) {
             Header("Prompt Generator", "Create copy-ready prompts for Codex builds, UI polish, bug fixes, premium features, listings, logos, screenshots, privacy notes, and version updates.")
             if (project != null) {
                 val promptTypes = listOf("Full app build prompt", "MVP-only prompt", "UI improvement prompt", "Bug fix prompt", "Add premium features prompt", "Play Store listing prompt", "App icon/logo prompt", "Store screenshot prompt", "Privacy policy notes prompt", "Update version prompt")
-                Column(Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                    promptTypes.chunked(2).forEach { row -> Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) { row.forEach { OutlinedButton(onClick = { vm.generatePrompt(project.id, it) }) { Text(it) } } } }
+                Column(Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    promptTypes.forEach {
+                        OutlinedButton(onClick = { vm.generatePrompt(project.id, it) }, modifier = Modifier.fillMaxWidth()) {
+                            Text(it)
+                        }
+                    }
                 }
             }
         }
@@ -486,7 +491,7 @@ private fun LaunchScreen(state: BuildSmithUiState, vm: BuildSmithViewModel) {
         } else {
             item {
                 Column(Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                    InfoCard("App tagline", "Turn app ideas into build-ready prompts.")
+                    InfoCard("App tagline", suggestedProjectTagline(project))
                     InfoCard("Short description", project.description)
                     InfoCard("Long description", "${project.summary}\n\nBuilt for ${project.targetUser}. It solves: ${project.problem}")
                     InfoCard("Keywords", "${project.category}, ${project.scope}, ${project.platform}, productivity, builder, planner")
@@ -527,7 +532,7 @@ private fun IconStudio(projectName: String) {
         Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
             Text("Icon Studio", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold)
             Text(status, color = MaterialTheme.colorScheme.onSurfaceVariant)
-            Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+            FlowChipGroup {
                 Button(onClick = { picker.launch("image/*") }) { Text("Pick icon") }
                 OutlinedButton(onClick = {
                     sourceBitmap?.let {
@@ -693,13 +698,34 @@ private fun Field(label: String, value: String, onChange: (String) -> Unit) {
 private fun ChoiceRow(label: String, values: List<String>, selected: String, onSelect: (String) -> Unit) {
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         Text(label, fontWeight = FontWeight.Bold)
-        values.chunked(3).forEach { row ->
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
-                row.forEach { FilterChip(selected = selected == it, onClick = { onSelect(it) }, label = { Text(it) }) }
-            }
+        FlowChipGroup {
+            values.forEach { FilterChip(selected = selected == it, onClick = { onSelect(it) }, label = { Text(it) }) }
         }
     }
 }
+
+@Composable
+private fun WrapChips(modifier: Modifier = Modifier, values: List<String>, selected: String, onSelect: (String) -> Unit) {
+    FlowChipGroup(modifier) {
+        values.forEach { FilterChip(selected = selected == it, onClick = { onSelect(it) }, label = { Text(it) }) }
+    }
+}
+
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+private fun FlowChipGroup(modifier: Modifier = Modifier, content: @Composable () -> Unit) {
+    FlowRow(
+        modifier = modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        content()
+    }
+}
+
+private fun suggestedProjectTagline(project: ProjectEntity): String =
+    project.description.takeIf { it.length in 8..80 }
+        ?: "Draft a short tagline for ${project.appName} based on its goal and target user."
 
 @Composable
 private fun EmptyState(text: String) {

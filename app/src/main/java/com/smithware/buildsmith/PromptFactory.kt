@@ -13,11 +13,14 @@ object PromptFactory {
         val futureFeatures = features.filter { it.priority == "Future" || it.monetization.contains("Pro", true) }
         val assets = features.filter { it.category == "Asset tracker" }
         val bugs = features.filter { it.category == "Bug / update log" }
+        val tagline = project.description.takeIf { it.length in 8..80 }
+            ?: "Draft a short tagline for ${project.appName} based on its goal and target user."
         return """
 Build a native app for ${settings.studioName} called "${project.appName}".
 
 Prompt type: $type
-Tagline: Turn app ideas into build-ready prompts.
+App tagline:
+$tagline
 
 App goal:
 ${project.summary.ifBlank { project.description }}
