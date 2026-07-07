@@ -6,6 +6,7 @@
 - Studio: Smithware Studios
 - Package: `com.smithware.buildsmith`
 - Repo: `https://github.com/BadBagger/buildsmith`
+- Repo visibility: public, so DevHub can read releases and download APK assets without a logged-in GitHub session
 - Role: local-first app-builder planning tool for turning rough app ideas into build-ready plans and Codex prompts
 - Latest release: `v0.1.0-devhub`
 - Release URL: `https://github.com/BadBagger/buildsmith/releases/tag/v0.1.0-devhub`
